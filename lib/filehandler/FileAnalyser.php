@@ -1,7 +1,9 @@
 <?php
 
-require_once(str_replace('//','/',dirname(__FILE__).'/') .'../CmdIO.php');
-require_once(str_replace('//','/',dirname(__FILE__).'/') .'../Debug/libDebug.php');
+$pathToPHPShellHelpers = str_replace('//','/',dirname(__FILE__).'/') .'../../../PHP-Shell-Helpers/';
+
+require_once($pathToPHPShellHelpers .'CmdIO.php');
+require_once($pathToPHPShellHelpers .'Debug/libDebug.php');
 
 
 /* -----------------------------------------------------------------------
@@ -232,7 +234,7 @@ class FileAnalyser {
 	
 	function writeCss(){
 		$filepath = $this->workingDir . '/style.css';
-		copy(str_replace('//','/',dirname(__FILE__).'/') .'../templates/analyse/style.css', $filepath);
+		copy(str_replace('//','/',dirname(__FILE__).'/') .'../../templates/analyse/style.css', $filepath);
 	}
 	
 	function writeErrorList(){
@@ -367,7 +369,7 @@ class FileAnalyser {
 	}
 	
 	function writeJs(){
-		copy(str_replace('//','/',dirname(__FILE__).'/') .'../templates/analyse/app.js', $this->workingDir . '/app.js');
+		copy(str_replace('//','/',dirname(__FILE__).'/') .'../../templates/analyse/app.js', $this->workingDir . '/app.js');
 	}
 
 }

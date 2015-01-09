@@ -72,7 +72,7 @@
 		$class = capitalise($env) .'LogAnalyser';
 		
 		// dynamically including the Demandware class
-		require_once(str_replace('//','/',dirname(__FILE__).'/') .'../lib_php/Filehandler/' . $env . '/' . $class . '.php');
+		require_once(str_replace('//','/',dirname(__FILE__).'/') .'../lib/filehandler/' . $env . '/' . $class . '.php');
 		
 		// this is a remote connection, start the remote process
 		if ($params->getVal('r') || $params->getVal('l')) {
@@ -83,7 +83,7 @@
 				}
 			} else {
 				// the default, if no explicit config is given
-				$configBaseDir = (str_replace('//','/',dirname(__FILE__).'/') .'AnalyseLogfiles/');
+				$configBaseDir = (str_replace('//','/',dirname(__FILE__).'/') .'../config/');
 				forEachFile($configBaseDir, '.*config.*\.php', true, 'processLogFiles');
 			}
 			
