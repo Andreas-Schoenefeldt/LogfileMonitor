@@ -1,0 +1,65 @@
+html, body {margin:0; padding:0;}
+html {font: 14px arial;}
+
+.page {margin: 30px 20px; }
+
+.entry {float: left; padding: 7px 4px;}
+.number {text-align: right; width: 50px;}
+.type {text-align: right; width: 230px;text-align: left;}
+.error_row {border-bottom: 1px solid #444;overflow: hidden;}
+.error_row:hover, .error_row:active, .error_row:focus {background-color: #ededed;cursor: help;}
+.error_table {border-top: 1px solid #444;}
+.message {margin: 0 72px 0 296px; float: none;}
+.actions {float: right; width: 60px;}
+
+.aditionals {font-size: 12px; color: #777; margin-top: 4px;}
+
+#ov_modal_overlay {position: static; z-index: 2000;position: fixed; top: 0; bottom: 0; left: 0; right:0; background-color: rgba(142,69,19,.6);}
+
+.overlay {position: fixed; top: 50px; bottom: 50px; left: 50px; right: 50px; padding: 30px 20px; overflow: auto; background-color: #fff; border: 3px solid #222;z-index: 2200}
+.overlay > .headline {display: block; margin-bottom: 13px; font-weight: bold; color: #666;}
+.preformated {overflow: auto;white-space: pre;padding: 18px; background-color: #F6F6F0;display: block;}
+.overlay > .preformated {position: absolute; top: 63px; bottom: 18px;right: 18px; left:18px;font-size: 12px;}
+.overlay > .close_btn {position: absolute; top: 18px; right: 18px;}
+
+.minibutton {background-color: #ffad76; border: 2px solid #fa944f; border-radius: 5px; padding: 2px 4px; cursor: pointer;color:#451356; }
+.minibutton:hover {color:#6f198b;background-color: #fbbc92; }
+
+.hidden {display: none !important;}
+.clear {clear:both;}
+.fl {float: left;}
+.fr {float: right;}
+
+a {text-decoration: none;}
+
+.page > .entry {margin: 0 6px 6px 0; padding: 12px;}
+.page > .entry > p {margin: 0;}
+.page > .entry > p > a {display: block;padding: 3px;}
+.page > .entry > p > a:hover, .page > .entry > p > a:active, .page > .entry > p > a:focus {background-color: rgba(255,255,255, .3);}
+.today-entry {background-color: #8adb66; border: 1px solid #285315;width: 428px;height: 298px;}
+.today-entry > h1 {margin-top: 0;border-bottom: 1px solid #000;}
+
+.past-entry {background-color: #66abdb;width: 200px;border: 1px solid #35688b;}
+.past-entry:hover {background-color: #84c7f6;} 
+.past-entry > h2 {margin-top: 0;}
+
+#footer {font-size: 12px; padding: 12px 0 30px; border-top: 3px dashed #999; margin-top: 30px; color: #aaa;}
+
+.occ-frame {margin: 10px 0;cursor: default;}
+
+.timing {height: 150px; overflow-y:hidden;overflow-x: scroll;position: relative;border-left: 1px dotted #444;margin-left: 25px;}
+.occurence {position: absolute; bottom: 0; width: 4px;background: green;}
+.occLbl {display: none;}
+
+.occ-line {position: absolute; bottom: 14px; width: 3px;cursor: default;top: 0;padding-right: 2px;}
+
+.occ-line:hover > .occurence {background:lightgreen; }
+.occ-line:hover > .occLbl {display: block; position: absolute;z-index: 3; bottom: 100px; left: -40px; white-space: nowrap; padding: 3px;background: #fff; box-shadow: 0 0 3px rgba(0,0,0,.3); border: 1px solid #ccc; border-radius: 4px;}
+
+.sideLabels {float: left; height: 120px;border-bottom: 1px solid #444; border-top: 1px solid #444; position: relative; width: 5px;margin-left: 20px;}
+.topLbl, .bottomLbl {position: absolute; width: 20px; text-align: right; right: 7px;}
+.topLbl {top: -7px;}
+.bottomLbl {bottom: -7px;}
+
+.bottomLabels {position: absolute; bottom: 0; height: 14px; left: 0; right: 0;}
+.btm-lbl {position: absolute; top: 0; border-left: 1px solid #444; height: 7px; padding: 0 4px;}
