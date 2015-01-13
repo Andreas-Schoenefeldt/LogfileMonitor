@@ -238,7 +238,7 @@ class FileAnalyser {
 	}
 	
 	function writeErrorList(){
-		$filename = $this->timestamp . '_' . $this->layout .'.html';
+		$filename = date('Y-m-d', $this->timestamp) . '_' . $this->layout .'.html';
 		$filepath = $this->workingDir . '/' . $filename;
 		
 		$file = fopen($filepath, 'w');
