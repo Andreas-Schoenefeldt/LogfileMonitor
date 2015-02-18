@@ -257,7 +257,7 @@
 				
 				
 				foreach ($results as $layout => $files) {
-					$filename = $pastDate. '_' . $layout .'.html';
+					$filename = date('Y-m-d', $pastDate) . '_' . $layout .'.html';
 					$filestring .= '<p><a href="' . $filename . '">' . $layout . ' logs</a></p>';
 				}
 				

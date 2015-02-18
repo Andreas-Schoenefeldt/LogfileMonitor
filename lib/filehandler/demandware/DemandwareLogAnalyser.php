@@ -882,22 +882,26 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		
 		if ($continue) {
 			
-			
-			//custom  infoscore/pipelets/RiskCheck.ds: Risk Check Result [[| {"status" : "OK", "communicationToken" : "46318476045772"} |]]
-		
-			// 'Unknown category ID'
-			
 			$errorType = explode(':', $this->alyStatus['entry'], 2);
 			$errorType[0] = trim($errorType[0]);
 			
-			
-			
 			if (count($errorType) > 1 && trim($errorType[1]) != '') {
 				
+				$errorLine = $errorType[1];
 				
-				
+				if (strpos($errorLine, '[[|') > -1 && strpos($errorLine, '|]]') === false) {
+					// the JSON has here a multiline error - getting the rest and adding it with " | " for the parser
+					while(strpos($errorLine, '|]]') === false){	
+						$newLine = $this->getNextLineOfCurrentFile();
+						$this->alyStatus['stacktrace'] .= $newLine . "\n";
+						$errorLine .= " | " . htmlentities($newLine, ENT_COMPAT);
+					}
+					
+					$errorLine = str_replace('&quot;}', '"}', $errorLine);
+				}
+
 				// try to find out, weather we have a JSON standardized error message here
-				preg_match('/^(.*?)\[\[\|(.*)\|\]\]$/', $errorType[1], $matchesJSON);
+				preg_match('/^(.*?)\[\[\|(.*)\|\]\]$/s', $errorLine, $matchesJSON);
 				
 				if(count($matchesJSON) && $matchesJSON[2]) {
 					
@@ -908,6 +912,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					
 					foreach($json as $key => $value) {
 						
+						$value = html_entity_decode($value); // decoding from above
 						if (is_numeric($key)) $key = '#' . $key;
 						if (is_numeric($value)) $value = '#' . $value;
 						
@@ -917,12 +922,12 @@ class DemandwareLogAnalyser extends FileAnalyser {
 						
 				} else if (startsWith($errorType[0], 'Exception while evaluating script expression')){
 					$this->alyStatus['errorType'] = 'Script Exception';
-					$this->alyStatus['entry'] = $errorType[1]; // substr($errorType[0], 45) . 
+					$this->alyStatus['entry'] = $errorLine; // substr($errorType[0], 45) . 
 				} else if (startsWith($errorType[0], 'Error executing script')) {
 					$this->alyStatus['errorType'] = 'Error executing script';
 					$this->alyStatus['entry'] = substr($this->alyStatus['entry'], 23) . ' ';
 				} else {
-					$this->alyStatus['entry'] = trim($errorType[1]);
+					$this->alyStatus['entry'] = trim($errorLine);
 					$errorType = (startsWith($errorType[0], 'org.')) ? explode('.', $errorType[0]) : explode(' ', $errorType[0]) ;
 					$this->alyStatus['errorType'] = array_pop($errorType);
 				}
