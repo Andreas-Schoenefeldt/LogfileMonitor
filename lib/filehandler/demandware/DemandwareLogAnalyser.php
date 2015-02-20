@@ -418,17 +418,6 @@ class DemandwareLogAnalyser extends FileAnalyser {
 				switch($this->alyStatus['errorType']){
 					default:
 						break;
-					case 'SendOgoneDeleteAuthorization.ds':
-					case 'SendOgoneAuthorization.ds':
-					case 'SendOgoneCapture.ds':
-					case 'SendOgoneRefund.ds':
-					case 'OgoneError':
-						
-						$this->parseOgoneError($this->alyStatus['entry']);
-						
-						if (endsWith($this->alyStatus['entry'], 'RequestUrl:')) $parseSecondLine = true;
-						
-						break;
 					case 'soapNews.ds':
 					case 'sopaVideos.ds':
 						
@@ -481,13 +470,6 @@ class DemandwareLogAnalyser extends FileAnalyser {
 						case 'Error executing script':
 							$this->alyStatus['entry'] .= ' ' . $newLine;
 							break;
-						case 'SendOgoneDeleteAuthorization.ds':
-						case 'SendOgoneAuthorization.ds':
-						case 'SendOgoneCapture.ds':
-						case 'SendOgoneRefund.ds':
-						case 'OgoneError':
-							$this->parseOgoneError($newLine);
-							break;
 					}
 				}
 				
@@ -499,90 +481,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			
 		}
 	}
-	
-	function parseOgoneError($line){
-		
-		$params = explode(' OrderNo:', $line, 2);
-						
-		// d($this->alyStatus['errorType']);
-		// d($params);
-		if (count($params) > 1) {
-			$line = substr($params[0], 0, -1);
-			$params = explode(',', $params[1]);
-			
-			// d($params);
-			
-			$this->alyStatus['data']['order numbers']['#' . trim($params[0])] = true;
-			
-			for ($i = 1; $i < count($params); $i++) {
-				$parts = explode(':', $params[$i],2);
-				$this->alyStatus['data'][trim($parts[0])][trim($parts[1])] = true;
-			}
-		}
-		
-		$params = explode(' Seconds since start:', $line, 2);
-		
-		if (count($params) > 1) {
-			
-			$line = substr($params[0], 0, -1);
-			// $params = explode(',', $params[1], 2);
-			// d($params);
-			
-			$this->alyStatus['data']['Seconds since start'][trim($params[1])] = true;
-		}
-		
-		$startStr = 'Capture successfully for Order ';
-		if (startsWith($line, $startStr)) {
-			
-			$this->alyStatus['data']['order numbers']['#' . trim(substr($line, strlen($startStr)))] = true;
-			$line = trim($startStr);
-		}
-		
-		// split the ogone Url
-		$start = 'https://secure.ogone.com';
-		if (startsWith($line, $start)) {
-			
-			$exceptions = array('java.net.SocketTimeoutException: Read timed out', 'Error connecting to Ogone Direct Link. Return Code: 404');
-			$parseURL = true;
-			
-			for($i = 0; $i < count($exceptions); $i++){
-				if (strrpos($this->alyStatus['entry'], $exceptions[$i]) > -1) {
-					$line = $exceptions[$i]; // line is now the error message
-					$parseURL = false;
-					break;
-				}	
-			}
-			
-			if ($parseURL) {
-				
-				$parts = explode('; OgoneError: ', $line, 2);
-				$url = explode('?', $parts[0]);
-				$params = explode('&', $url[1]);
-				
-				$line = 'OgoneError: ' . $parts[1];
-				
-				for ($i = 0; $i < count($params); $i++) {
-					$patlets = explode('=', $params[$i], 2);
-					
-					switch ($patlets[0]) {
-						case 'PM':
-						case 'OWNERTOWN':
-						case 'OPERATION':
-						case 'FLAG3D':
-							$this->alyStatus['data'][$patlets[0]][trim($patlets[1])] = true;
-							break;
-						case 'AMOUNT':
-							$this->alyStatus['data'][$patlets[0]][  substr(trim($patlets[1]), 0, -2) . '.' . substr(trim($patlets[1]), -2)] = true;
-							break;
-					}
-				}
-			}
-		}
-		
-		$this->alyStatus['entry'] = $line;
-	}
-	
-	
+
 	// parsinfg of the error logs
 	function analyse_error_line($line){
 		if ($this->alyStatus['enter']) {  // && substr($line, 0, 1) == '[' && substr($line, 25, 4) == 'GMT]' [2012-05-22 00:11:56.785 GMT]
@@ -628,6 +527,9 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					case 'Exception occurred during request processing':
 					case 'ISH-CORE-2351':
 					case 'ISH-CORE-2354':
+						
+						
+						$this->alyStatus['entry'] = preg_replace("/ \[TemplateNamespace id=.*?\]/", "", $this->alyStatus['entry']); // taking out the not usefull TemplateNamespace id
 						
 						if ($errorLineLayout == 'extended') {
 							switch ($messageParts[0]) {
@@ -802,7 +704,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			$this->alyStatus['add'] = true;
 			return $line;
 		} else { // now we try to find general error information like QueryString:, PathInfo: etc.
-			$generalInformations = array('QueryString');
+			$generalInformations = array(); // 'QueryString', 'SessionID'
 			
 			foreach($generalInformations as $index => $searchString){
 				if (startsWith($line, $searchString))	{
@@ -838,7 +740,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		for ($i = 0; $i < count($this->errorExceptions); $i++) {
 			if (startsWith($this->alyStatus['entry'], $this->errorExceptions[$i]['start'])) {
 				$this->alyStatus['errorType'] = $this->errorExceptions[$i]['type'];
-				if (array_key_exists('solve', $this->errorExceptions[$i])) $this->alyStatus = $this->errorExceptions[$i]['solve']($this->errorExceptions[$i], $this->alyStatus);
+				if (array_key_exists('solve', $this->errorExceptions[$i])) $this->alyStatus = $this->errorExceptions[$i]['solve']($this->errorExceptions[$i], $this->alyStatus, $this);
 				$continue = false;
 				break;
 			}
@@ -854,7 +756,6 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			}
 			
 			if (count($errorType) > 1) {
-				
 					$dots = explode('.', trim(str_replace(':', '', $errorType[0])));
 					
 					$this->alyStatus['errorType'] = trim(array_pop($dots));
@@ -874,7 +775,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		for ($i = 0; $i < count($this->customErrorExceptions); $i++) {
 			if (startsWith($this->alyStatus['entry'], $this->customErrorExceptions[$i]['start'])) {
 				$this->alyStatus['errorType'] = $this->customErrorExceptions[$i]['type'];
-				if (array_key_exists('solve', $this->customErrorExceptions[$i])) $this->alyStatus = $this->customErrorExceptions[$i]['solve']($this->customErrorExceptions[$i], $this->alyStatus);
+				if (array_key_exists('solve', $this->customErrorExceptions[$i])) $this->alyStatus = $this->customErrorExceptions[$i]['solve']($this->customErrorExceptions[$i], $this->alyStatus, $this);
 				$continue = false;
 				break;
 			}
