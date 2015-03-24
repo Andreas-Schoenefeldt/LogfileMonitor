@@ -240,9 +240,6 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			$errorCount = $this->addEntry($this->alyStatus['timestamp'], $this->alyStatus['errorType'], $this->alyStatus['entry'], $this->alyStatus['entryNumber'], $this->alyStatus['fileIdent'], $this->alyStatus['data'], $this->alyStatus['stacktrace']);
 			$alertMail = $this->checkAlert($errorCount, $this->alyStatus['stacktrace']);
 			
-			d($alertMail);
-			die();
-			
 			if (!empty($alertMail)) {
 				$this->alertMails[$this->alyStatus['entry']] = $alertMail;
 			}
@@ -896,6 +893,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		
 		// check for any other threshold
 		foreach ($thresholds as $threshold => $expression) {
+			
 			switch($threshold) {
 				default:
 					throw new Exception('Don\'t know how to handel ' . $threshold . ' threshold.');
@@ -940,21 +938,18 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		return $mail;
 	}
 	
-	// checks simple threshold value for fiven threshold expression
-	function checkSimpleValueThreshold($expression, $checkvalue) {
+	// checks simple threshold value for given threshold expression
+	function checkSimpleValueThreshold($expression, $checkvalue) {		
 		$exceeded_value = null;
-		$filelayoutExists = false;
 		if (is_array($expression)) {
 			foreach ($expression as $filelayout => $value) {
 				if ($this->layout == $filelayout) {
-					if ($filelayout!==0) {
-						$filelayoutExists = true;
-					}
-					// allow default value when no threshold for current layout exists
-					if (($checkvalue > $value || $checkvalue < 0) && ($filelayout!==0 || !$filelayoutExists)) {	
-						$exceeded_value = $value;
-					}
+					$exceeded_value = $value;
 				}
+			}
+			
+			if ($exceeded_value === null && array_key_exists('default', $expression)) {
+				$exceeded_value = $expression['default'];
 			}
 		}
 		return $exceeded_value;
