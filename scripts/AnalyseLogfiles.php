@@ -239,7 +239,10 @@
 				
 				Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout);
 				
-				if ($download) upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUrl, $filename);
+				if ($download) {
+					if (! isset($webdavUploadURL)) $io->fatal('$webdavUploadURL is not defined - please add it to ' . $configFile);
+					upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUploadURL, $filename);
+				}
 				
 				
 			}
@@ -271,9 +274,10 @@
 			fclose($file);
 			
 			if ($download) {
-				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUrl, 'index.html');
-				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUrl, 'app.js');
-				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUrl, 'style.css');
+				if (! isset($webdavUploadURL)) $io->fatal('$webdavUploadURL is not defined - please add it to ' . $configFile);
+				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUploadURL, 'index.html');
+				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUploadURL, 'app.js');
+				upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUploadURL, 'style.css');
 			}
 		
 		} catch (Exception $e) {
@@ -332,11 +336,12 @@
 	function upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUrl, $filename) {
 		global $io;
 		
-		$uploadPath = $webdavUrl . '/html/' . $filename;
+		$uploadPath = $webdavUrl . '/' . $filename;
 		$localFile = $htmlWorkingDir . '/' . $filename;
 		$commandBody = "curl -k --user \"$webdavUser:$webdavPswd\" ";
 		$command =  $commandBody . '-T "' . $localFile . '" "' . $uploadPath . '"';
-		
+		$io->out();
+		$io->out('> ' . $command );
 		$io->out('> ----------------------------------');
 		$io->out('> Uploading ' . $filename); 
 		$io->out('>' . $localFile . ' to ' . $uploadPath);
