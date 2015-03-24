@@ -240,6 +240,9 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			$errorCount = $this->addEntry($this->alyStatus['timestamp'], $this->alyStatus['errorType'], $this->alyStatus['entry'], $this->alyStatus['entryNumber'], $this->alyStatus['fileIdent'], $this->alyStatus['data'], $this->alyStatus['stacktrace']);
 			$alertMail = $this->checkAlert($errorCount, $this->alyStatus['stacktrace']);
 			
+			d($alertMail);
+			die();
+			
 			if (!empty($alertMail)) {
 				$this->alertMails[$this->alyStatus['entry']] = $alertMail;
 			}
