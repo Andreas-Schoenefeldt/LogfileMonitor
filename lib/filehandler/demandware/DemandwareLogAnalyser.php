@@ -257,6 +257,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			case 'error':
 				$line = $this->analyse_error_line($line);
 				break;
+			case 'jobs':
 			case 'customwarn':
 			case 'customerror':
 				$line = $this->analyse_customerror_line($line);
