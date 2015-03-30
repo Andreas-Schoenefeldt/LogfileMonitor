@@ -7,7 +7,7 @@
 	require_once($pathToPHPShellHelpers . 'CmdIO.php');
 	require_once($pathToPHPShellHelpers . 'Filehandler/staticFunctions.php');
 	require_once($pathToPHPShellHelpers . 'ComandLineTools/CmdParameterReader.php');
-	require_once($pathToPHPShellHelpers . 'Mail/Mail.php');
+	require_once(str_replace('//','/',dirname(__FILE__).'/') .'../lib/Mail/Mail.php');
 	
 	define("LOCAL_LISTING_FILENAME", '_listing.html' );
 	
@@ -237,7 +237,7 @@
 				
 				$analyser->setResultFileName($webdavUrl . '/html/' . $filename);
 				
-				Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout);
+				Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout, $emailConfiguration);
 				
 				if ($download) {
 					if (! isset($webdavUploadURL)) $io->fatal('$webdavUploadURL is not defined - please add it to ' . $configFile);

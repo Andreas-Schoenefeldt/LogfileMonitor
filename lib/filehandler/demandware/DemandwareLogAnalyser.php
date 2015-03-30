@@ -856,8 +856,6 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		$filesize = round(filesize($filename) / 1024, 2);
 		// get configuration
 		$thresholds = $this->alertConfiguration['thresholds'];
-		$senderemailaddress = $this->alertConfiguration['senderemailaddress'];
-		$emailadresses = $this->alertConfiguration['emailadresses'];
 		// preset mail variables
 		$message = ($errorCount>0 ? "Error Count: $errorCount\n\n" : "")."Last logfile impacted: ".substr (strrchr($filename,'/'), 1)."\n\nLogfile size: $filesize KB\n\n".$stacktrace; 
 		$mail = array();
