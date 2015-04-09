@@ -215,7 +215,7 @@
 					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js" type="text/javascript"></script>
 					<script src="app.js" type="text/javascript"></script><link href="style.css" type="text/css" rel="stylesheet">
 					<meta http-equiv="refresh" content="900">
-				</head><body><div class="page"><p><b>' + strtoupper($projectTechName) + ' Logfiles</b></p><div class="today-entry entry"><h1>'.$title.'</h1>');
+				</head><body><div class="page"><p><b>' . strtoupper($projectTechName) . ' Logfiles</b></p><div class="today-entry entry"><h1>'.$title.'</h1>');
 			
 			$settings = array(
 				  'from' => $params->getVal('ts')
