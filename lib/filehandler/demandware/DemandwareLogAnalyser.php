@@ -856,6 +856,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		$filesize = round(filesize($filename) / 1024, 2);
 		// get configuration
 		$thresholds = $this->alertConfiguration['thresholds'];
+		
 		// preset mail variables
 		$message = ($errorCount>0 ? "Error Count: $errorCount\n\n" : "")."Last logfile impacted: ".substr (strrchr($filename,'/'), 1)."\n\nLogfile size: $filesize KB\n\n".$stacktrace; 
 		$mail = array();
@@ -869,7 +870,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			}
 		}
 		
-		// check for count pattern
+		// check for count pattern - if a specific error has a certain count override
 		if (isset($thresholds['countpattern'])) {
 			$countPattern = $this->checkSimplePatternThreshold($thresholds['countpattern'], $stacktrace);
 			if (!empty($countPattern)) {
@@ -889,16 +890,19 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			}
 		}
 		
-		// check for any other threshold
+		
+		
+		// check for any other threshold - default fallback
 		foreach ($thresholds as $threshold => $expression) {
 			
 			switch($threshold) {
 				default:
-					throw new Exception('Don\'t know how to handel ' . $threshold . ' threshold.');
+					throw new Exception('Don\'t know how to handle ' . $threshold . ' threshold.');
 					break;
 				case 'errorcount':
 					$maxErrorCount = $this->checkSimpleValueThreshold($expression, $errorCount);
-					if (!empty($maxErrorCount)) {
+					// only send an email, if the threshold is over the edge
+					if (!empty($maxErrorCount) && $errorCount > $maxErrorCount) {
 						$mail[$threshold] = array(
 							'message' => "Threshold: Error Count $maxErrorCount exceeded.\n\n".$message,
 							'subject' => "Error Count $maxErrorCount exceeded"
@@ -929,10 +933,11 @@ class DemandwareLogAnalyser extends FileAnalyser {
 				case 'ignorepattern':
 				case 'countpattern':
 				case 'patterncount':
+					// this has been already handled above
 					break;
 			}
 		}
-		
+				
 		return $mail;
 	}
 	
