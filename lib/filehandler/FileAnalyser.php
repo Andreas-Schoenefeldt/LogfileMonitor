@@ -270,7 +270,7 @@ class FileAnalyser {
 			
 			$pathexplodes = explode('/', $this->files[$stats['fileIdent']]);
 			
-			$fileString .= '<div class="error_row widget_showAditionals">' . "\n";
+			$fileString .= '<div class="error_row widget_showAditionals" id="' . $this->getIdHash($message) . '">' . "\n"; // note that we id the actual message with a md4 hash
 			$fileString .= '	<div class="entry number">' . $stats['count'] . ' x</div>' . "\n";
 			$fileString .= '	<div class="entry type">' . htmlentities($stats['type']) . '</div>' . "\n";
 			$fileString .= '	<div class="entry actions"><a class="widget_traceoverlay minibutton" title="show the raw stacktrace of this error">raw<span class="hidden overlay"><span class="headline">First occurence in line ' . $stats['line'] . ', logfile ' . $pathexplodes[count($pathexplodes) - 1] . '</span><pre class="preformated">' . htmlentities($stats['stacktrace']) . '</pre></span></a></div>' . "\n";
@@ -372,6 +372,10 @@ class FileAnalyser {
 	
 	function writeJs(){
 		copy(str_replace('//','/',dirname(__FILE__).'/') .'../../templates/analyse/app.js', $this->workingDir . '/app.js');
+	}
+	
+	function getIdHash($identifyer) {
+		return hash('md4', $identifyer); // we are using md4, because it is the fastest hash of all of them
 	}
 
 }

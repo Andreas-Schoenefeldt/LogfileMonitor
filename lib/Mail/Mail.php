@@ -51,11 +51,13 @@ class Mail {
 					$success=true;
 					//only send when not already sent before
 					if (!in_array($errorType.$threshold, $mailStorage)) {
-						d("mail [$errorType]");
+						d("> SEND MAIL [$errorType]");
+						
+						$mailBody = "<html><head></head><body><p>Error Type: $errorType</p><pre style=\"font:inherit;\">".$thresholdMail['message'] . '</pre><p><a href="' . $analyser->getResultFileName() . '#' . $analyser->getIdHash($errorType) . '" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>';
 						
 						$success = Mail::sendMail(	join(',',$emailadresses), 
 									"$subject [$errorType] - ".$thresholdMail['subject'], 
-									"<html><head></head><body><p>Error Type: $errorType</p><pre style=\"font:inherit;\">".$thresholdMail['message'] . '</pre><p><a href="' . $analyser->getResultFileName() . '" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>', 
+									$mailBody, 
 									$senderemailaddress
 								);
 					} 

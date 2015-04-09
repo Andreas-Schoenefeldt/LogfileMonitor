@@ -235,7 +235,7 @@
 				$filename = $analyser->printResults('html');
 				fwrite($file, '<p><a href="'. $filename .'"><strong>'. $analyser->layout . ' logs</strong> ('.$analyser->getErrorCount().' different errors, '. $analyser->getAllErrorCount() .' total)</a></p>');
 				
-				$analyser->setResultFileName($webdavUrl . '/html/' . $filename);
+				$analyser->setResultFileName($webdavUploadURL . '/' . $filename);
 				
 				Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout, $emailConfiguration);
 				

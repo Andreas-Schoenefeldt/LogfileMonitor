@@ -1,5 +1,11 @@
 jQuery(document).ready(function(){
 	Widgets.initSome($("body"), ["showAditionals", "traceoverlay"]);
+	
+	// open the selected error, if there is one
+	if (window.location.hash) {
+		$(window.location.hash).click();
+	}
+	
 });
 
 /*
