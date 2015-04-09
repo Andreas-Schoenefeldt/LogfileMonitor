@@ -238,12 +238,14 @@ class FileAnalyser {
 	}
 	
 	function writeErrorList(){
+		global $projectTechName; // gettingthe techname from the config
+		
 		$filename = date('Y-m-d', $this->timestamp) . '_' . $this->layout .'.html';
 		$filepath = $this->workingDir . '/' . $filename;
 		
 		$file = fopen($filepath, 'w');
 		
-		$title = $this->layout . ' logs overview - ' . date('d.m.Y', $this->timestamp) .' from ' . $this->settings['from_human'] . ' to ' . $this->settings['to_human'] . ' GMT + ' . $this->settings['timezoneOffset'];
+		$title = $projectTechName . ' ' . $this->layout . ' overview - ' . date('d.m.Y', $this->timestamp) .' from ' . $this->settings['from_human'] . ' to ' . $this->settings['to_human'] . ' GMT + ' . $this->settings['timezoneOffset'];
 		
 		$navigation = '<div class="navigation"><a href="index.html">back to overview</a></div>';
 		
