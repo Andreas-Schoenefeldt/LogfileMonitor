@@ -810,15 +810,17 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					$this->alyStatus['entry'] = $matchesJSON[1];
 					
 					$json = json_decode($matchesJSON[2], true);
-					
-					foreach($json as $key => $value) {
-						
-						$value = html_entity_decode($value); // decoding from above
-						if (is_numeric($key)) $key = '#' . $key;
-						if (is_numeric($value)) $value = '#' . $value;
-						
-						$this->alyStatus['data'][$key][$value] = true;
-						
+										
+					if($json) { // is case we have to deal with invalid json
+						foreach($json as $key => $value) {
+							
+							$value = html_entity_decode($value); // decoding from above
+							if (is_numeric($key)) $key = '#' . $key;
+							if (is_numeric($value)) $value = '#' . $value;
+							
+							$this->alyStatus['data'][$key][$value] = true;
+							
+						}
 					}
 						
 				} else if (startsWith($errorType[0], 'Exception while evaluating script expression')){

@@ -237,9 +237,9 @@
 				
 				$analyser->setResultFileName($webdavUploadURL . '/' . $filename);
 				
-				Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout, $emailConfiguration);
-				
 				if ($download) {
+					Mail::sendDWAlertMails($analyser, $targetWorkingFolder, $alertConfiguration, $layout, $emailConfiguration);
+					
 					if (! isset($webdavUploadURL)) $io->fatal('$webdavUploadURL is not defined - please add it to ' . $configFile);
 					upload($webdavUser, $webdavPswd, $htmlWorkingDir, $webdavUploadURL, $filename);
 				}
