@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [.Wishlist  Customer wishlist or anonymous wishlist missing for merging.] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: .Wishlist  Customer wishlist or anonymous wishlist missing for merging.</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 545
+
+Last logfile impacted: customerror-blade7-4-appserver-20150625.log
+
+Logfile size: 29.04 KB
+
+[2015-06-25 11:20:30.470 GMT] ERROR PipelineCallServlet|17310802|Sites-DE-Site|Cart-Show|PipelineCall|BbGBTSwz0M46XmXn_TqWqX9_ZXzpHr1gFJKdKZuNq8ZQIHDd-a6yEZCVOoTJdeSpzOdL8ZsRI2u2RbOxKvS6vw== custom.Wishlist  Customer wishlist or anonymous wishlist missing for merging.
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_customerror.html#ca71f2d3e21110a3fa566e8ad7b7f8ef" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

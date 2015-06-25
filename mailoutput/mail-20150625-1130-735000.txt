@@ -1,0 +1,52 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [ Wirecard Query Failed ] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type:  Wirecard Query Failed </p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 52
+
+Last logfile impacted: customerror-blade7-4-appserver-20150625.log
+
+Logfile size: 29.04 KB
+
+[2015-06-25 09:24:45.130 GMT] ERROR PipelineCallServlet|22537820|Sites-NL-Site|WIRECARD_ProcessPayment-HandleAsyncResponse|PipelineCall|MWL81gZwKlg7xRDoggU_kviiH8GOdvbDk5F6FLYgWJOAJHv8fnPXhq9NOzX5bdUYgsnFq6XvWG6eDwJlrSnfKA== custom  WIRECARD_ProcessPayment... QueryAsyncTransaction IDEAL: Wirecard Query Failed [[| {"orderNo" : "41057462", "ScriptLog" : "Webservice Communication: WirecardAsyncQueryService (https://api.wirecard.com/engine/rest/merchants/%merchant-account-id%/payments/search?payment.request-id=%notification-request-id%)
+Request:
+1
+Response:
+<payment xmlns="http://www.elastic-payments.com/schema/payment" self="http://p-elastic-tom0.wirecard.sys:9000/engine/rest/merchants/62ccf3cc-1a05-43f4-815a-bff868639c28/payments/04284886-1b1c-11e5-afe9-005056a96a4d">
+<merchant-account-id ref="http://p-elastic-tom0.wirecard.sys:9000/engine/rest/merchants/62ccf3cc-1a05-43f4-815a-bff868639c28">62ccf3cc-1a05-43f4-815a-bff868639c28</merchant-account-id>
+<transaction-id>04284886-1b1c-11e5-afe9-005056a96a4d</transaction-id>
+<request-id>bc9swiaajk4FYaaadm1vlxaWMc</request-id>
+<transaction-type>debit</transaction-type>
+<transaction-state>failed</transaction-state>
+<completion-time-stamp>2015-06-25T09:24:44.000Z</completion-time-stamp>
+<statuses>
+<status code="500.1057" description="The acquirer returned Error or Ineligible Transaction.  Please contact technical support." severity="error"/>
+</statuses>
+<requested-amount currency="EUR">565.900000</requested-amount>
+<parent-transaction-id>617eb264-1b1b-11e5-afe9-005056a96a4d</parent-transaction-id>
+<order-number>41057462</order-number>
+<descriptor>Hugo Boss order 41057462</descriptor>
+<notifications>
+<notification url="https://www.hugoboss.com/on/demandware.store/Sites-NL-Site/nl_NL/WIRECARD_ProcessPayment-HandleAsyncNotification?orderNo=41057462&amp;orderToken=6ioEEcLmWz42zWDde-Mx258qS3yk9-3cqux1mBqi3Fs&amp;pMethod=IDEAL"/>
+</notifications>
+<custom-fields>
+<custom-field field-name="orderNo" field-value="41057462"/>
+<custom-field field-name="orderToken" field-value="6ioEEcLmWz42zWDde-Mx258qS3yk9-3cqux1mBqi3Fs"/>
+</custom-fields>
+<payment-methods>
+<payment-method name="ideal"/>
+</payment-methods>
+<bank-account>
+<bic>ABNANL2A</bic>
+</bank-account>
+<cancel-redirect-url>https://www.hugoboss.com/on/demandware.store/Sites-NL-Site/nl_NL/WIRECARD_ProcessPayment-HandleAsyncCancelResponse?pMethod=IDEAL&amp;orderNo=41057462&amp;orderToken=6ioEEcLmWz42zWDde-Mx258qS3yk9-3cqux1mBqi3Fs</cancel-redirect-url>
+<success-redirect-url>https://www.hugoboss.com/on/demandware.store/Sites-NL-Site/nl_NL/WIRECARD_ProcessPayment-HandleAsyncResponse?pMethod=IDEAL&amp;orderNo=41057462&amp;orderToken=6ioEEcLmWz42zWDde-Mx258qS3yk9-3cqux1mBqi3Fs</success-redirect-url>
+</payment>
+service=WirecardAsyncQueryService,code=OK,ccode=,error=,msg=OK,requestId=,clarification=,site=NL,duration=1420
+at location WirecardAsyncQueryResponse: async query failed for order 41057462 with status codes 500.1057 (The acquirer returned Error or Ineligible Transaction.  Please contact technical support.)
+"} |]]
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_customerror.html#0660d67f372c246d1549889a144ca7a3" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

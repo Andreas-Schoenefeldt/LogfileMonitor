@@ -1,0 +1,39 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [Illegal hex characters in escape (%) pattern from external URL.] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: Illegal hex characters in escape (%) pattern from external URL.</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 32
+
+Last logfile impacted: error-blade7-4-appserver-20150625.log
+
+Logfile size: 967.24 KB
+
+[2015-06-25 08:57:03.467 GMT] ERROR PipelineCallServlet|31268611|Sites-FR-Site|Product-Show|OnRequest|2-qubb77Td47toHbF_ikxE6uJakh65H5cNwn9PGtX13VfGFiyH_vWIa7NaUBpLyaGZ_tzsnc5M-YRghlGyXn9g== system.core  - Sites-FR-Site core Storefront 2-qubb77Td47toHbF_ikxE6uJakh65H5cNwn9PGtX13VfGFiyH_vWIa7NaUBpLyaGZ_tzsnc5M-YRghlGyXn9g== UA-0-VWLwl-rAgAK-0-00 3633764963415959552 "CORE debug     : <RedirectUrlMgrImpl> getUrlByUri, (referrer url=http://www.moteur-shopping.com/redirect/4021415899450_r3268329/sg/4/s_id/8?origin=&s_evar6=cebqhvgf-zbfnvdhr&s_evar7=znedhrf:%2Sznedhr%2Suhtb-obff_o2589%2Subzzr_p6%2Spunhffher-ubzzr_p176)java.lang.IllegalArgumentException: URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "2S"
+System Information
+------------------
+RequestID: UA-0-VWLwl-rAgAK-0-00
+SessionType: STOREFRONT
+SessionID: 2-qubb77Td47toHbF_ikxE6uJakh65H5cNwn9PGtX13VfGFiyH_vWIa7NaUBpLyaGZ_tzsnc5M-YRghlGyXn9g==
+ServerName: localhost
+ServerPort: 10253
+1
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-FR-Site/fr_FR/Product-Show
+Method: GET
+PathInfo: /Sites-FR-Site/fr_FR/Product-Show
+QueryString: pid=4021415899450&utm_source=pureshopping&utm_medium=affiliate&utm_campaign=productfeed&utm_term=27250
+Remote Address: 80.12.39.118
+1
+Request Parameters
+------------------
+utm_medium=affiliate
+utm_campaign=productfeed
+utm_source=pureshopping
+pid=4021415899450
+utm_term=27250"
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_error.html#391737167dfa914800bf96fe954fd74b" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

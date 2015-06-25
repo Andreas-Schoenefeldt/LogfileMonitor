@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [.WC-ID  Undefined Entry for PAYPAL_EXPRESS_NOTIFICATION] - Error Count 100 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: .WC-ID  Undefined Entry for PAYPAL_EXPRESS_NOTIFICATION</p><pre style="font:inherit;">Threshold: Error Count 100 exceeded.
+
+Error Count: 457
+
+Last logfile impacted: customwarn-blade7-4-appserver-20150625.log
+
+Logfile size: 188.51 KB
+
+[2015-06-25 11:28:30.548 GMT] WARN PipelineCallServlet|31268611|Sites-FR-Site|WIRECARD_ProcessPayment-HandleAsyncNotification|PipelineCall|ze5foHHLOUICmyY5ENC_Uqmxxsnk_29UouffJSm-3JkmUw2DL2AruQIX5DBnyAQrx918jb7vMKR6Y4W-_DojFw== custom.WC-ID  Undefined Entry for PAYPAL_EXPRESS_NOTIFICATION
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_customwarn.html#9109db8150b235c2a0e35d48461cac1d" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

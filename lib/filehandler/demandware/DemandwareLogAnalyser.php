@@ -643,13 +643,15 @@ class DemandwareLogAnalyser extends FileAnalyser {
 							break;
 						case 'ISH-CORE-2368':
 							
-							if (startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Start node not found')) {
-								preg_match('/Start node not found \\((?P<node>.*?)\\) for pipeline \\((?P<pipeline>.*?)\\)/', $newLine, $hits);
+							if (startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Start node not found') 
+								|| startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Start node is not public') 
+							) {
+								preg_match('/ \\((?P<node>.*?)\\) for pipeline \\((?P<pipeline>.*?)\\)/', $newLine, $hits);
 								$pipe = $hits['pipeline'] . '-' . $hits['node'];
 							} else if (startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Pipeline not found')) {
 								preg_match('/Pipeline not found \\((?P<pipeline>.*?)\\) for current domain \\(.*?\\)/', $newLine, $hits);
 								$pipe = $hits['pipeline'];
-							}
+							} 
 							
 							if (! isset($pipe) || ! $pipe) {
 								d($newLine);

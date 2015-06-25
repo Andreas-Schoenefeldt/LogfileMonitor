@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [getOnlineSubCategories Quota] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: getOnlineSubCategories Quota</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 157
+
+Last logfile impacted: quota-blade7-4-appserver-20150625.log
+
+Logfile size: 192.96 KB
+
+[2015-06-25 10:05:34.750 GMT] [PipelineCallServlet|30669405|Sites-UK-Site|Home-IncludeHeader|PipelineCall|W_o6fZpOFzTcE1q4X4gcw-W6CUrTBxtz082u4qdn_8ZUNPSGY2vTiimuXJAS_tjOkw3zp8i0ZEz19QSQsDHbJA==] Quota api.dw.catalog.Category.getOnlineSubCategories()@SF (internal, limit 0): limit exceeded 20 time(s), max actual was 1, current location: request/site Sites-UK-Site/top pipeline Home-IncludeHeader/interaction node/template app_005fboss_005fui.default_.components.header.header_002d9e01d0d071a6f5d15b3ba2cdffc1723349e4f1a8/script app_boss_core:/util/ViewHelpers.ds:57
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_quota.html#beef0dc91eaa5cedf03743db3b8cf221" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

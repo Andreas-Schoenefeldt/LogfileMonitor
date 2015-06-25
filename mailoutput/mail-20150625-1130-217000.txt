@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [queryObjects Quota] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: queryObjects Quota</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 51
+
+Last logfile impacted: quota-blade6-6-appserver-20150625.log
+
+Logfile size: 212.61 KB
+
+[2015-06-25 11:25:01.566 GMT] [JobThread|25376560|OrderExportUS|JobExecutor-Start] Quota api.queryObjects@JOB (internal, limit 0): limit exceeded 9 time(s), max actual was 1, current location: job/job OrderExportUS/top pipeline JobExecutor-Start
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_quota.html#8bde204db46c7de129f4518c52bad7fc" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

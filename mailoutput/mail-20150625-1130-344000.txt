@@ -1,0 +1,34 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [Secure connection required for this request.] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: Secure connection required for this request.</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 172
+
+Last logfile impacted: error-blade7-4-appserver-20150625.log
+
+Logfile size: 967.24 KB
+
+[2015-06-25 11:28:52.059 GMT] ERROR PipelineCallServlet|12513718|Sites-CH-Site|COSummary-Submit|PipelineCall|rVgRX6JyfGFxUl2cH5VRRI8VV6sDdW2swHdNnZZkppJdIDgkCcS68bt11a-kQZ1rtLkMAyat3WpZ5OlH2p6yXw== system.core  ISH-CORE-2355 Sites-CH-Site core Storefront rVgRX6JyfGFxUl2cH5VRRI8VV6sDdW2swHdNnZZkppJdIDgkCcS68bt11a-kQZ1rtLkMAyat3WpZ5OlH2p6yXw== 6A_cuFWL5fSrAgAK-0-00 6841330636064945152 "ISH-CORE-2355: Error executing pipeline: COSummary Sub-Pipeline: COSummary NodeID: Submit.1:DStartNode.1
+com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Secure connection required for this request.
+System Information
+------------------
+RequestID: 6A_cuFWL5fSrAgAK-0-00
+SessionType: STOREFRONT
+SessionID: rVgRX6JyfGFxUl2cH5VRRI8VV6sDdW2swHdNnZZkppJdIDgkCcS68bt11a-kQZ1rtLkMAyat3WpZ5OlH2p6yXw==
+ServerName: localhost
+ServerPort: 10253
+1
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-CH-Site/de_CH/COSummary-Submit
+Method: GET
+PathInfo: /Sites-CH-Site/de_CH/COSummary-Submit
+Remote Address: 5.10.86.154
+1
+Request Parameters
+------------------"
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_error.html#76e6dbafc67acc9c514e8e1c5d45bb6c" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

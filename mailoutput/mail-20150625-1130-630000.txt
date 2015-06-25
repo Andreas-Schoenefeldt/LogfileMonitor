@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [A web application was not able to stop a thread - this is likely to create a memory leak] - Error Count 20 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type: A web application was not able to stop a thread - this is likely to create a memory leak</p><pre style="font:inherit;">Threshold: Error Count 20 exceeded.
+
+Error Count: 480
+
+Last logfile impacted: error-blade7-4-appserver-20150625.log
+
+Logfile size: 967.24 KB
+
+[2015-06-25 01:15:41.053 GMT] ERROR localhost-startStop-2 org.apache.catalina.loader.WebappClassLoader  The web application [] appears to have started a thread named [HystrixTimer-32] but has failed to stop it. This is very likely to create a memory leak.
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_error.html#a6bc35fbeb66325e2dda0e0515131b37" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>

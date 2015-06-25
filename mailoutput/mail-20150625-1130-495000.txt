@@ -1,0 +1,16 @@
+To: ralf.borchers@bee.io,aldo.muehlhause@bee.io,thomas.mueller@bee.io,asc@bee.io,f.schmidt@xceptance.de
+Subject: [HB PRD ALERT]  [ Wirecard Authorization Success ] - Error Count 100 exceeded
+MIME-Version: 1.0
+Content-type: text/html; charset=utf-8
+From: noreply@bee.io
+
+<html><head></head><body><p>Error Type:  Wirecard Authorization Success </p><pre style="font:inherit;">Threshold: Error Count 100 exceeded.
+
+Error Count: 425
+
+Last logfile impacted: customwarn-blade7-4-appserver-20150625.log
+
+Logfile size: 188.51 KB
+
+[2015-06-25 11:18:04.317 GMT] WARN PipelineCallServlet|11280680|Sites-FR-Site|WIRECARD_ProcessPayment-Handle3DSResponse|PipelineCall|jKfz2ELXGH1GytFzxJ4jMMVzehfZqvsTdn5Ri9aQkHLHVb41Q6KQmM9bIzp8D9OZeWKglZ2WzBKhIaAXkPiYNg== custom  WIRECARD_ProcessPayment-ProcessAuthorization: Wirecard Authorization Success [[| {"orderNo" : "41057866", "PaymentMethod" : "WIRECARD_CREDIT"} |]]
+</pre><p><a href="https://dev09.web.hugo.demandware.net/on/demandware.servlet/webdav/Sites/Impex/customLogs//2015-06-25_customwarn.html#911677183b47b88350040fb2aeae341d" style="font-weight: bold;font-size: 1.2em;display:inline-block; background-color: #84c7f6; text-decoration:none;padding: 4px 8px;border: 1px solid #35688b; border-radius: 3px;">View Online</a></p></body></html>
