@@ -558,7 +558,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					// errors with pipeline, but second line has the real error message
 					case 'ISH-CORE-2368':
 					case 'ISH-CORE-2355':
-						$this->alyStatus['entry'] = ($errorLineLayout == 'extended') ? $messageParts[3] . ' > ' : '';
+						$this->alyStatus['data']['systemError'][$this->alyStatus['errorType']] = true;
 						if ($errorLineLayout == 'extended') $this->alyStatus['data']['sites'][$this->extractSiteID(trim($messageParts[2]))] = true;
 						break;
 					
@@ -636,6 +636,30 @@ class DemandwareLogAnalyser extends FileAnalyser {
 						default:
 							$this->alyStatus['entry'] .= ' ' . $newLine;
 							break;
+						case 'ISH-CORE-2355':
+							$this->alyStatus['entry'] = 'Secure connection required for this request.';
+							if ($errorLineLayout == 'extended') $this->alyStatus['data']['pipeline'][$messageParts[3]] = true;
+							$this->alyStatus['errorType'] = 'Pipeline Execution Exception';
+							break;
+						case 'ISH-CORE-2368':
+							
+							if (startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Start node not found')) {
+								preg_match('/Start node not found \\((?P<node>.*?)\\) for pipeline \\((?P<pipeline>.*?)\\)/', $newLine, $hits);
+								$pipe = $hits['pipeline'] . '-' . $hits['node'];
+							} else if (startsWith($newLine, 'com.demandware.beehive.core.capi.pipeline.PipelineExecutionException: Pipeline not found')) {
+								preg_match('/Pipeline not found \\((?P<pipeline>.*?)\\) for current domain \\(.*?\\)/', $newLine, $hits);
+								$pipe = $hits['pipeline'];
+							}
+							
+							if (! isset($pipe) || ! $pipe) {
+								d($newLine);
+								d($hits);
+							}
+							
+							$this->alyStatus['entry'] = 'Pipeline not found Error';
+							$this->alyStatus['data']['pipeline'][$pipe] = true;
+							$this->alyStatus['errorType'] = 'Pipeline Execution Exception';
+							break;
 						case 'ISH-CORE-2482':
 							$this->alyStatus['entry'] = $newLine;
 							$this->extractMeaningfullData();
@@ -695,9 +719,21 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					
 				} else {
 					
-					$this->alyStatus['entry'] = $line;
-					d($parts);
-					$this->displayError($line);
+					// now we catch a few frequent core errors, that also land here
+					// ERROR localhost-startStop-2 org.apache.catalina.loader.WebappClassLoader  The web application [] appears to have started a thread named [HystrixTimer-1] but has failed to stop it. This is very likely to create a memory leak.
+					if (startsWith($line, 'ERROR localhost-startStop-')) {
+						
+						preg_match('/The web application \\[(?P<application>.*?)\\] appears to have started a thread named \\[(?P<thread>.*?)\\] but has failed to stop it\\. This is very likely to create a memory leak\\./', $line, $hits);
+						
+						$this->alyStatus['errorType'] = "Thread Stop Failure";
+						$this->alyStatus['entry'] = 'A web application was not able to stop a thread - this is likely to create a memory leak';
+						$this->alyStatus['data']['application'][$hits['application']] = true;
+						$this->alyStatus['data']['threadName'][$hits['thread']] = true;
+					} else {
+						$this->alyStatus['entry'] = $line;
+						d($parts);
+						$this->displayError($line);
+					}
 				}
 			}
 		} else if ($this->startsWithTimestamp($line)) { // a log entry is unfortuatly only finished after we found the next entry or end of file 
@@ -821,6 +857,9 @@ class DemandwareLogAnalyser extends FileAnalyser {
 							$this->alyStatus['data'][$key][$value] = true;
 							
 						}
+					} else {
+						d('invalid JSON part');
+						d($matchesJSON[2]);
 					}
 						
 				} else if (startsWith($errorType[0], 'Exception while evaluating script expression')){
