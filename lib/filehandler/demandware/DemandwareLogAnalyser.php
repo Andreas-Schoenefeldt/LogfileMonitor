@@ -56,6 +56,30 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			),
 			
 			array(
+				  'start' => 'Wrapped java.lang.IllegalArgumentException: Virtual path ['
+				, 'type' => 'Virtual path invalid'
+				, 'weight'	=> 9
+				, 'solve' => function($definition, $alyStatus){
+					preg_match('/Wrapped java\.lang\.IllegalArgumentException: Virtual path \[(?P<file>.*?)\] (?P<explanation>.*?) \(\[Template:(?P<template>.*?)\)$/', $alyStatus['entry'], $matches);
+					// $alyStatus['data']['file'][$matches['file']] = true; // taking out the file for now, because it more spam then usefull
+					$alyStatus['entry'] = 'Virtual path ' . $matches['explanation'];
+					return $alyStatus;
+				}
+			),
+		
+			array(
+				  'start' => 'An infinite loop was detected within the Redirect URL configuration. Caused by request URL'
+				, 'type' => 'Redirect URL configuration'
+				, 'weight'	=> 9
+				, 'solve' => function($definition, $alyStatus){
+					$alyStatus['data']['url'][substr($alyStatus['entry'], strlen($definition['start']))] = true;
+					$alyStatus['entry'] = 'An infinite loop was detected within the Redirect URL configuration.';
+					return $alyStatus;
+				}
+			),
+			
+			
+			array(
 				  'start' => 'Unexpected error: JDBC/SQL error: '
 				, 'type' => 'ORMSQLException'
 				, 'weight'	=> 9
@@ -93,6 +117,35 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					return $alyStatus;
 				}
 			),
+			
+			// CORE debug : <RedirectUrlMgrImpl> getUrlByUri, (referrer url=http://www.moteur-shopping.com/redirect/4021420158832_r3321745/sg/4/s_id/8?origin=xxx&s_evar6=cebqhvgf-zbfnvdhr&s_evar7=znedhrf:%2Sznedhr%2Suhtb-obff_o2589%2Subzzr_p6%2Spunhffher-ubzzr_p176%2Sonfxrg-graqnapr-ubzzr_p181)java.lang.IllegalArgumentException: URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "2S""
+			array(
+				  'start' => 'CORE debug : <RedirectUrlMgrImpl> getUrlByUri, '
+				, 'type' => 'URLDecoder'
+				, 'weight'	=> 0
+				, 'solve' => function($definition, $alyStatus){
+					
+					preg_match('/^.*?getUrlByUri, \(referrer url=(?P<referrer>.*?)\)java.lang.IllegalArgumentException: URLDecoder: Illegal hex characters in escape \(%\) pattern - For input string: "(?P<string>.*?)".*?$/', $alyStatus['entry'], $matches);
+					if(! count($matches)) {
+						preg_match('/^.*?getUrlByUri, \(referrer url=(?P<referrer>.*?)\)java.lang.IllegalArgumentException: URLDecoder: (?P<exception>.*?)$/', $alyStatus['entry'], $matches);
+					}
+					
+					if( array_key_exists('string',  $matches)) $alyStatus['data']['errorString'][$matches['string']] = true;
+					
+					if (array_key_exists('referrer',  $matches) && startsWith($matches['referrer'], 'referrer url=')) {
+						$alyStatus['data']['referrer'][substr($matches['referrer'], 13)] = true;
+						$alyStatus['entry'] = 'Illegal hex characters in escape (%) pattern from external URL.';
+					} else if (array_key_exists('referrer',  $matches)){
+						$alyStatus['data']['URI'][substr($matches['referrer'], 4)] = true;
+						$alyStatus['entry'] = 'Illegal hex characters in escape (%) pattern from URI.';
+					}
+					
+					if( array_key_exists('exception',  $matches)) $alyStatus['entry'] = $matches['exception'];
+	
+					return $alyStatus;
+				}
+			),
+			
 			
 			array(
 				  'start' => 'CORE debug     : <RedirectUrlMgrImpl> getUrlByUri, '
@@ -228,7 +281,14 @@ class DemandwareLogAnalyser extends FileAnalyser {
 				$this->alyStatus['stacktrace'] .= $line . "\n";
 			}
 			
-			$line = $this->analyseLine($line);
+			try {
+				$line = $this->analyseLine($line);
+			} catch(Exception $e) {
+				d('EXCEPTION PARSING LINE:' . $line);
+				d($e->getMessage());
+			}
+			
+			
 		}
 		$this->addError($fileIdent, '');
 	}
