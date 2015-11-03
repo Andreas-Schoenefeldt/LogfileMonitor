@@ -268,6 +268,16 @@ class FileAnalyser {
 		
 		foreach ($this->entrys as $message => $stats) {
 			
+			$additionals = '';
+			
+			foreach ($stats['data'] as $headline => $data){
+				if( strtolower($headline) == 'orderno' ) {
+					$additionals = '<div class="silent">'. $this->getDataEntryDisplay($headline, $data) .'</div>';
+					unset($stats['data'][$headline]);
+					break;
+				}
+			}
+			
 			$pathexplodes = explode('/', $this->files[$stats['fileIdent']]);
 			
 			$fileString .= '<div class="error_row widget_showAditionals" id="' . $this->getIdHash($message) . '">' . "\n"; // note that we id the actual message with a md4 hash
@@ -278,7 +288,7 @@ class FileAnalyser {
 			$fileString .= '	</div>' . "\n";
 			$fileString .= '
 	<div class="entry message">
-		<div>' . htmlentities($message) . '</div>
+		<div>' . htmlentities($message) . "\n" . $additionals . '</div>
 		<div class="aditionals">' . "\n";
 			
 			foreach ($stats['data'] as $headline => $data){
@@ -288,19 +298,7 @@ class FileAnalyser {
 				if (count($data)) {
 					
 					if ($headline != 'GMT timestamps') {
-						// sort the values and keep the key => value associations
-						asort($data);
-						$data= array_reverse($data);
-					
-				
-						foreach ($data as $value => $count) {
-							if (! $first) $valString .= ', ';
-							if ($count > 1) $valString .= '[' . $count . 'x] ';
-							$valString .= $value;
-							$first = false;
-						}
-						
-						$fileString .=  '<div><strong>' . htmlentities($headline) . ':</strong> ' . htmlentities($valString) . '</div>'. "\n";
+						$fileString .= $this->getDataEntryDisplay($headline, $data);
 					} else {
 						$maxCount = 0;
 						foreach ($data as $value => $count) {
@@ -366,6 +364,25 @@ class FileAnalyser {
 		fclose($file);
 		
 		return $filename;
+	}
+	
+	// gets one error line
+	function getDataEntryDisplay($headline, $data) {
+		// sort the values and keep the key => value associations
+		asort($data);
+		$data = array_reverse($data);
+		
+		$first = true;
+		$valString = '';
+
+		foreach ($data as $value => $count) {
+			if (! $first) $valString .= ', ';
+			if ($count > 1) $valString .= '[' . $count . 'x] ';
+			$valString .= $value;
+			$first = false;
+		}
+		
+		return '<div><strong>' . htmlentities($headline) . ':</strong> ' . htmlentities($valString) . '</div>'. "\n";
 	}
 	
 	function displayError($line){

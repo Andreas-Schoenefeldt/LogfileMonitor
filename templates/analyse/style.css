@@ -12,7 +12,7 @@ html {font: 14px arial;}
 .message {margin: 0 72px 0 296px; float: none;}
 .actions {float: right; width: 60px;}
 
-.aditionals {font-size: 12px; color: #777; margin-top: 4px;}
+.aditionals, .silent {font-size: 12px; color: #777; margin-top: 4px;}
 
 #ov_modal_overlay {position: static; z-index: 2000;position: fixed; top: 0; bottom: 0; left: 0; right:0; background-color: rgba(142,69,19,.6);}
 
