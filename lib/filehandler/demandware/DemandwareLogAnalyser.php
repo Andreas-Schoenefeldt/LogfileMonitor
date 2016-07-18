@@ -783,6 +783,8 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					
 					// now we catch a few frequent core errors, that also land here
 					// ERROR localhost-startStop-2 org.apache.catalina.loader.WebappClassLoader  The web application [] appears to have started a thread named [HystrixTimer-1] but has failed to stop it. This is very likely to create a memory leak.
+					// ERROR OnChangeIndexer-thread-1 com.demandware.component.search3.index.SearchSvcRequestFactory  - - - - 8679935854433576960  Outdated order found. Loaded OCA 301104337, Index Request OCA 301104338 for order (41935546, bc6tYiaajfl06aaadcwYcHb5V1)
+					// ERROR background-executor-3 com.demandware.beehive.bts.internal.orderprocess.basket.datagrid.FetchBasketConfigFromMoceTask  - - - - 2081329827211234304  Failed executing basket config poll task
 					if (startsWith($line, 'ERROR localhost-startStop-')) {
 						
 						preg_match('/The web application \\[(?P<application>.*?)\\] appears to have started a thread named \\[(?P<thread>.*?)\\] but has failed to stop it\\. This is very likely to create a memory leak\\./', $line, $hits);
@@ -791,6 +793,17 @@ class DemandwareLogAnalyser extends FileAnalyser {
 						$this->alyStatus['entry'] = 'A web application was not able to stop a thread - this is likely to create a memory leak';
 						$this->alyStatus['data']['application'][$hits['application']] = true;
 						$this->alyStatus['data']['threadName'][$hits['thread']] = true;
+						
+					} else if (startsWith($line, 'ERROR OnChangeIndexer-thread-')) {
+						
+						preg_match('/Outdated order found. Loaded OCA [0-9]*?, Index Request OCA [0-9]*? for order \((?P<orderNo>.*?),/', $line, $hits);
+						
+						$this->alyStatus['errorType'] = "DW Internal Order Indexer";	
+						$this->alyStatus['entry'] = 'Outdated order found';
+						$this->alyStatus['data']['order No']['#' . $hits['orderNo']] = true;
+					} else if (startsWith($line, 'ERROR background-executor-')) {
+						$this->alyStatus['errorType'] = "DW Internal Background Executor";	
+						$this->alyStatus['entry'] = 'Failed executing basket config poll task';
 					} else {
 						$this->alyStatus['entry'] = $line;
 						d($parts);
