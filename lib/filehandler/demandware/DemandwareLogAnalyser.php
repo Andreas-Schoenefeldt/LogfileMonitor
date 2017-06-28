@@ -551,6 +551,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			$this->alyStatus['data'] = array('sites' => array(), 'customers' => array(), 'dates' => array(), 'GMT timestamps' => array(), 'pipelines' => array(), 'urls' => array());
 			
 			$isExtended = $this->startsWithTimestamp($line);
+            
 			if ($isExtended) {
 				$this->alyStatus['timestamp'] = strtotime(substr($line, 1, 27));
 				$this->alyStatus['data']['dates'][substr($line, 1, 10)] = true;
@@ -562,7 +563,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 				$errorLineLayout = 'core_extract';
 				$parts = explode(':', $line, 2);
 			}
-			
+            
 			if (count($parts) > 1) {
 				
 				$this->alyStatus['entry'] = trim($parts[1]);
@@ -764,12 +765,53 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			} else {
 				
 				// we probably have an error like this
-				// ERROR JobThread|14911671|BazaarProductCatalogExport|JobExecutor-Start system.dw.net.SFTPClient  {0}
+				
 				
 				$parts = explode('|', $line);
-				
-				if (count($parts) > 3) {
-					
+                
+                if (count($parts) == 6) {
+                    // ERROR PipelineCallServlet|1240173582|Sites-RX-BE-Site|Product-Detail|PipelineCall|MzMbhhzUFQ5hXBwTh0eax41f6IvMpYXuDk-dI9v07DkaEpeO879byK9BkR21oPupB5UcUhOk_xkszcY51A0ZDw== system.core  Sites-RX-BE-Site STOREFRONT MzMbhhzUFQ5hXBwTh0eax41f6IvMpYXuDk-dI9v07DkaEpeO879byK9BkR21oPupB5UcUhOk_xkszcY51A0ZDw== uBEqVFlS8YSrAgAK-1-63 7762035536076453888 The following message was generated more than 10 times within the last 180 seconds. It will be suppressed for 180 seconds: Loading script file 'int_tealium:helpers.ds' from cartridge 'int_tealium'. Cartridge not assigned to current site 'Sites-RX-BE-Site'.
+                    // ERROR PipelineCallServlet|1107565453|Sites-RX-IE-Site|Search-Show|PipelineCall|7bmw1u15_T_lKi4ZVQk-MXr16l1XgOsoZZ3BPQoXsF7Y84SKBBVZBD8QlsVCWxXMd0e0rKsRDZxuwtA3I6cbww== system.core  Sites-RX-IE-Site STOREFRONT 7bmw1u15_T_lKi4ZVQk-MXr16l1XgOsoZZ3BPQoXsF7Y84SKBBVZBD8QlsVCWxXMd0e0rKsRDZxuwtA3I6cbww== NpoDQ1lS8aqrAgAK-0-00 391139902702621696  Loading script file 'int_tealium:helpers.ds' from cartridge 'int_tealium'. Cartridge not assigned to current site 'Sites-RX-IE-Site'.
+
+                    $this->alyStatus['data']['pipelines'][$parts[3]] = true;
+                    $this->alyStatus['data']['sites'][$this->extractSiteID(trim($parts[2]))] = true;
+                    
+                    preg_match('/.*== [a-zA-Z0-9\-_]*? [0-9]*? (?P<message>.*)/', $parts[5], $hits);
+                    
+                    if( array_key_exists('message', $hits) && $hits['message']) {
+                        $pos = strpos($hits['message'], 'Cartridge not assigned to current site');
+                        
+                        if ($pos > -1) {
+                            $this->alyStatus['entry'] = trim(str_replace('The following message was generated more than 10 times within the last 180 seconds. It will be suppressed for 180 seconds: ', '', substr($hits['message'], 0, $pos)));
+                        } else {
+                            $this->alyStatus['entry'] = trim($hits['message']);
+                        }
+                    } else {
+                        $this->alyStatus['entry'] = $parts[5];
+                        d($parts);
+                        $this->displayError($line);
+                    }
+                    
+                    $errorId = 'Error executing pipeline: ';
+                    if ( startsWith($this->alyStatus['entry'], $errorId)){
+                        
+                        // COCustomer Sub-Pipeline: Login NodeID: Process.1/b3.2/b2.1/b3.1:DPipeletNode:LoginCustomer.1
+                        
+                        preg_match('/\\w*? Sub-Pipeline: (?P<pipeline>\\w*?) NodeID: (?P<node>\\w*?)\\.[0-9]/', $this->alyStatus['entry'], $hits);
+                        
+                        if (count($hits)) {
+                            $pipe = $parts[3] . ':' . $hits['pipeline'] . '-' . $hits['node'];
+                            $this->alyStatus['entry'] = 'pipeline execution error: ' . $pipe;
+                        } else {
+                            $pipe = substr($this->alyStatus['entry'], strlen($errorId));
+                            $this->alyStatus['entry'] = 'Error executing pipeline';
+                            $this->alyStatus['data']['pipe'][$pipe] = true;
+                        }
+                    } 
+                    
+                } else if (count($parts) == 4) {
+					// ERROR JobThread|14911671|BazaarProductCatalogExport|JobExecutor-Start system.dw.net.SFTPClient  {0}
+                    
 					$look = 'ERROR';
 					
 					if ( startsWith($look, trim($parts[0]) )) $this->alyStatus['errorType'] = $look . ' ';
@@ -804,7 +846,31 @@ class DemandwareLogAnalyser extends FileAnalyser {
 					} else if (startsWith($line, 'ERROR background-executor-')) {
 						$this->alyStatus['errorType'] = "DW Internal Background Executor";	
 						$this->alyStatus['entry'] = 'Failed executing basket config poll task';
-					} else {
+					} else if (startsWith($line, 'ERROR ShopAPIServlet|')) {
+                        
+                        preg_match('/File has no content: \'(?P<file>.*?\\/wapi_shop_config\\.json)\'/', $line, $hits);
+                        
+                        if( array_key_exists('file', $hits) && $hits['file']) {
+                            
+                            $this->alyStatus['entry'] = 'wapi_shop_config.json has no content';
+                            $this->alyStatus['data']['file'][$hits['file']] = true;
+                        
+                        } else {
+                            
+                            $this->alyStatus['entry'] = $line;
+                            d($parts);
+                            $this->displayError($line);
+                            
+                        }
+                        
+                    } else if (startsWith($line, 'ERROR http-bio-')) {
+                        $parts = explode('  ', $line);
+                        $this->alyStatus['entry'] = $parts[count($parts) - 1];
+                    } else {
+                        
+                        // we check the  File has no content: '/remote/f_aahh/aahh/aahh_prd/sharedata/sites/Sites-RX-DE-Site/2/config/wapi/wapi_shop_config.json'
+                        
+                        
 						$this->alyStatus['entry'] = $line;
 						d($parts);
 						$this->displayError($line);
@@ -814,6 +880,8 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		} else if ($this->startsWithTimestamp($line)) { // a log entry is unfortuatly only finished after we found the next entry or end of file 
 			$this->alyStatus['add'] = true;
 			return $line;
+        } else if ($this->alyStatus['entry'] == 'Error in template script.' && startsWith($line, 'Stack trace <')){
+            $this->alyStatus['entry'] .= ' Trace: ' . substr($line, strlen($line) - 33, 32);
 		} else { // now we try to find general error information like QueryString:, PathInfo: etc.
 			$generalInformations = array(); // 'QueryString', 'SessionID'
 			

@@ -152,7 +152,7 @@ class FileAnalyser {
 				$this->errorcount++; // errors +1
 			}
 			
-			if ($lineNumber < $this->entrys[$key]['line']) {
+			if (strlen($stacktrace) >= strlen($this->entrys[$key]['stacktrace'])) {
 				$this->entrys[$key]['line'] = $lineNumber;
 				$this->entrys[$key]['fileIdent'] = $fileIdent;
 				$this->entrys[$key]['stacktrace'] = $stacktrace;
