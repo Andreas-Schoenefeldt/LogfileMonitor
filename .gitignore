@@ -3,3 +3,6 @@
 config
 processing
 mailoutput
+
+# IDE
+.idea/

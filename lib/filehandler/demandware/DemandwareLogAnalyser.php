@@ -557,7 +557,7 @@ class DemandwareLogAnalyser extends FileAnalyser {
 				$this->alyStatus['data']['dates'][substr($line, 1, 10)] = true;
 				$this->alyStatus['data']['GMT timestamps'][substr($line, 11, 6)] = true;
 				$line = substr($line, 30);
-				$parts = explode(' "', $line, 2);
+				$parts = explode('== ', $line);
 				$errorLineLayout = 'extended';
 			} else {
 				$errorLineLayout = 'core_extract';
@@ -565,9 +565,15 @@ class DemandwareLogAnalyser extends FileAnalyser {
 			}
             
 			if (count($parts) > 1) {
-				
-				$this->alyStatus['entry'] = trim($parts[1]);
-				$messageParts = ($isExtended) ? explode('|', trim(str_replace('ERROR', '', $parts[0]))): array(); // 0 => basic description, 1 => timestamp?, 2 => Site, 3 => Pipeline, 4 => another description? 5 => Cryptic stuff
+
+			    $entry = trim($parts[count($parts) - 1]);
+
+			    // let's see, if we have a log id, which is not an id - so it needs to be cleaned out
+                $entry = preg_replace('/[\w-]{16}-\d-\d{2} \d{19} - /', '', $entry);
+
+
+                $this->alyStatus['entry'] = $entry;
+				$messageParts = ($isExtended) ? explode('|', trim(str_replace('ERROR', '', $parts[0]))): array(); // 0 => basic description, 1 => timestamp?, 2 => Site, 3 => Pipeline, 4 => another description? 5 => Session Id
 				
 				// d($line);
 				$this->extractMeaningfullData();
@@ -915,7 +921,8 @@ class DemandwareLogAnalyser extends FileAnalyser {
 		);
 		
 		$continue = true;
-		
+
+		// loop over the custom error functions
 		for ($i = 0; $i < count($this->errorExceptions); $i++) {
 			if (startsWith($this->alyStatus['entry'], $this->errorExceptions[$i]['start'])) {
 				$this->alyStatus['errorType'] = $this->errorExceptions[$i]['type'];

@@ -135,7 +135,7 @@
 			
 				foreach($searchExpressions as $layout => $searchExpression){
 					preg_match_all('/<tt>(' . $searchExpression . ')<\\/tt>/', $line, $match);
-					
+
 					if(count($match[0])) {
 						for ($i = 0; $i < count($match[1]); $i++) {
 							$file = $match[1][$i];
